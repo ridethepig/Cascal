@@ -11,8 +11,16 @@ namespace Compiler_build1
         protected char c;
         public  lexer(string input)
         {
-               this.input = input;
-               c = input[p];
+            this.input = input;
+            try
+            {
+                c = input[p];                
+            }
+            catch
+            {
+                Console.WriteLine("F**k,where is your code?");
+                System.Environment.Exit(-1);
+            }
         }
         public void consume(){
             p++;
@@ -54,7 +62,7 @@ namespace Compiler_build1
                 {
                     case ' ': case '\t': case '\n': case '\r': WS(); continue;
                     case ',': case ';': case '{': case '}': case '(': case ')':
-                    case ']': case ':' : consume(); return new Token(c);
+                    case ']': case ':' : { char t = c; consume(); return new Token(t); }
                     case '/': consume(); if (c == '?') { consume(); Comment(); continue; } return new Token((int)(tok_names.Div), "/");
                     case '*': consume(); return new Token((int)(tok_names.Mul), "*");
                     case '=': consume(); if (c == '=') { consume(); return new Token((int)(tok_names.Assign), "=="); } return new Token((int)(tok_names.Eq), "=");

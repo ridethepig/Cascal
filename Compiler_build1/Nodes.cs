@@ -37,7 +37,7 @@ namespace Compiler_build1
     }
     public class ElseStmt : ExprNode
     {
-        public ElseStmt(tok_names t) : base(t) { this.evalType = (int)tok_names.Else; }
+        public ElseStmt(Token t) : base(t) { this.evalType = (int)tok_names.Else; }
     }
     public class BlockNode : ExprNode
     {

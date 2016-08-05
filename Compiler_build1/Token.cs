@@ -7,6 +7,7 @@ namespace Compiler_build1{
             this.type = type;
             this.text = text;
         }
+        public Token(string text) {this.text = text; }
         public Token(int type)
         {
             this.type = type;

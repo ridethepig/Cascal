@@ -6,7 +6,7 @@ namespace Compiler_build1
 {
     public enum tok_names
     {
-        Num = 2, Fun, Sys, Glo, Loc, Id,
+        Num = 2, Fun,Begin, Sys, Glo, Loc, Id,
         Char, Else, If, Int, Return, Sizeof, While,
         Assign, Lor, Lan , Lno, Or, Xor, And, Eq, Ne, Lt, Gt, Le, Ge , Add, Sub, Mul, Div, Mod, Inc, Dec, Brak , Block , Var
     };

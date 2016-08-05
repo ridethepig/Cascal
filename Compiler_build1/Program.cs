@@ -12,8 +12,19 @@ namespace Compiler_build1
         static void Main(string[] args)
         {
             //            FileStream sFile = new FileStream("hello.c", FileMode.Open);
-            string input = File.ReadAllText(args[0]);
+            string filepath = "";
+            if (args.Length == 0)
+            {
+                filepath = Convert.ToString(Console.ReadLine());
+            }
+            else
+            {
+                filepath = args[0];
+            }
+            string input = File.ReadAllText(filepath);
             listlexer lex = new listlexer(input);
+            Parser par = new Parser(lex);
+            par.GlobDaclare();
             /*Token t = lex.nextToken();
             while (t.type != listlexer.EOF_T)
             {
