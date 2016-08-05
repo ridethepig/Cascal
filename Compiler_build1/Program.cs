@@ -22,7 +22,8 @@ namespace Compiler_build1
                 filepath = args[0];
             }
             string input = File.ReadAllText(filepath);
-            listlexer lex = new listlexer(input);
+            string inputx = input.ToUpper();
+            listlexer lex = new listlexer(inputx);
             Parser par = new Parser(lex);
             par.GlobDaclare();
             /*Token t = lex.nextToken();

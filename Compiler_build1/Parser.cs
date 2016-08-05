@@ -30,6 +30,7 @@ namespace Compiler_build1
         public lexer input;
         Token lookahead;
         public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
+        public static List<string> Occured = new List<string>();
         public Parser(lexer input)
         {
             this.input = input;
@@ -70,16 +71,30 @@ namespace Compiler_build1
                 throw new Exception("F**k!Where is your code?");
             }
         }
+        public bool Occur(string text)
+        {
+            for(int i = 0;i < Occured.Count; i++)
+            {
+                if (Occured[i] == text)
+                {
+                    throw new Exception("Name '" + text + "' were declared.");
+                    return true;
+                }
+            }
+            return false;
+        }
         public void Glob_Syb()
         {
+            //bool occured_ch, occured_int = false;
             while (lookahead.type==((int)tok_names.Id) )
             {
                 Symbol_Tab loc = new Symbol_Tab("Global");
                 while (lookahead.type != ':')
                 {
-                    if (lookahead.type == (int)tok_names.Id)
-                    {
+                    if (lookahead.type == (int)tok_names.Id && !Occur(lookahead.text))
+                    { 
                         loc.children.Add(lookahead.text);
+                        Occured.Add(lookahead.text);
                         consume();
                         
                     }
@@ -94,6 +109,7 @@ namespace Compiler_build1
                     default:
                         throw new Exception("No Such Type" + lookahead.text);
                 }
+                Global_Symbol_Tab.Add(loc);
                 match(';');
             }
         }
