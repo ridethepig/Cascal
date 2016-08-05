@@ -115,7 +115,12 @@ namespace Compiler_build1
         }
         public void Statement()
         {
+            CodeGen gen = new CodeGen();
+            gen.addChild(new FuncNode(new Token((int)tok_names.Begin, "MAIN")));
+            while(lookahead.type != '}')
+            {
 
-        }//¥¶¿Ì”Ôæ‰øÈ
+            }
+        }
     }
 }
