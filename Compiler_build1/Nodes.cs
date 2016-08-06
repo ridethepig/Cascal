@@ -40,30 +40,15 @@ namespace Compiler_build1
     {
         public ElseStmt(Token t) : base(t) { this.evalType = (int)tok_names.Else; }
     }
-    public class BlockNode : ExprNode
+    public class StmtNode : ExprNode
     {
-        public BlockNode(Token t) : base(t) { this.evalType = (int)tok_names.Block; }
+        public StmtNode(Token t) : base(t) { this.evalType = (int)tok_names.Stmt; }
     }
     public class FuncNode : ExprNode
     {
         public FuncNode(Token t) : base(t) { this.evalType = (int)tok_names.Fun; }
     }
-    public class CodeGen
-    {
-        protected Token token;
-        protected List<AST> children;
 
-        public CodeGen() {; }        
-
-        public void addChild(AST t)
-        {
-            if (children == null)
-            {
-                children = new List<AST>();
-            }
-            children.Add(t);
-        }
-    }
     public class OperatNode : ExprNode
     {
         public OperatNode (Token t,int type) : base(t) { this.evalType = type; }

@@ -123,22 +123,32 @@ namespace Compiler_build1
         }
         public void Statement()
         {
-            /*CodeGen gen = new CodeGen();
-            gen.addChild(new FuncNode(new Token((int)tok_names.Begin, "MAIN")));
-            while(lookahead.type != '}')
+            int ptr_chd = 0;
+            CodeGen gen = new CodeGen();
+            gen.addChild(new AST(new Token((int)tok_names.Begin, "MAIN")));
+            while(true)
             {
-                switch (lookahead.type)
+                switch (LA(1))
                 {
-                    case (int)tok_names.Id:
+                    case (int)tok_names.Id:if (LA(2) == (int)tok_names.Assign)
                         {
-                            Token temp = lookahead;
-                            consume();
-                            match('=');
-
+                            gen.children[0].addChild(new AST(new Token((int)tok_names.Stmt, gen.children[0].token.text)));
+                            gen.children[0].children[ptr_chd].addChild(new AST(new Token((int)tok_names.Assign, "=")));
+                            gen.children[0].children[ptr_chd].children[0].addChild(new AST(new Token((int)tok_names.Id, LT(1).text)));
+                            Expression(gen.children[0].children[0]);
                             break;
                         }
+                        else
+                            throw new Exception("expecting '=';get " + LT(2).text);
+                    case (int)tok_names.If:break;
+                    case (int)tok_names.While:break;
+                    case (int)tok_names.Sys:break;
                 }
-            }*/
+            }
+        }
+        public void Expression(AST assign)
+        {
+
         }
     }
 }

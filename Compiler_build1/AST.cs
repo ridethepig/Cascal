@@ -6,8 +6,8 @@ namespace Compiler_build1
 {
     public class AST
     {
-        protected Token token;
-        protected List<AST> children;
+        public Token token;
+        public List<AST> children;
 
         public AST() {; }
         public AST(Token t) { token = t; }
@@ -53,5 +53,21 @@ namespace Compiler_build1
             }
             return local;
         }*/
+    }
+    public class CodeGen
+    {
+        public Token token;
+        public List<AST> children;
+
+        public CodeGen() {; }
+
+        public void addChild(AST t)
+        {
+            if (children == null)
+            {
+                children = new List<AST>();
+            }
+            children.Add(t);
+        }
     }
 }
