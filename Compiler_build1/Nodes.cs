@@ -46,7 +46,7 @@ namespace Compiler_build1
     }
     public class FuncNode : ExprNode
     {
-        public FuncNode(Token t) : base(t) { this.evalType = (int)}
+        public FuncNode(Token t) : base(t) { this.evalType = (int)tok_names.Fun; }
     }
     public class CodeGen
     {

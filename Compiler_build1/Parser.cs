@@ -25,33 +25,41 @@ namespace Compiler_build1
 
         }
     }
-    public class Parser
+    public class Parser_Base
     {
-        public lexer input;
-        Token lookahead;
-        public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
-        public static List<string> Occured = new List<string>();
-        public Parser(lexer input)
+        lexer input;
+        protected Token[] lookahead;
+        int k;
+        int p = 0;
+        public Parser_Base(lexer input,int k)
         {
             this.input = input;
+            this.k = k;
+            lookahead = new Token[k];
+            for (int i = 1;i <= k; i++) { consume(); }
         }
         public void consume()
         {
-            lookahead = input.nextToken();
+            lookahead[p] = input.nextToken();
+            p = (p + 1) % k;
         }
+        public Token LT(int i) { return lookahead[(p + i - 1) % k]; }
+        public int LA(int i) { return LT(i).type; }
         public void match(int x)
         {
-            if (lookahead.type == x)
-            {
-                consume();
-            }
-            else throw new Exception(/*"expecting " + input.getTokenName(x) +
-                             "; found " + lookahead.text*/"unexpected character:"+lookahead.text+":"+lookahead.type);
+            if (LA(1) == x) { consume(); }
+            else throw new Exception("unexpected char: " + LT(1).text);
         }
+    }
+    public class Parser : Parser_Base
+    {
+        public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
+        public static List<string> Occured = new List<string>();
+        public Parser(lexer input,int k):base(input,k){; }
         public void GlobDaclare()
         {
-            consume();
-            if (lookahead.text == "VAR")
+            //consume();
+            if (LT(1).text == "VAR")
             {
                 consume();
                 match('{');
@@ -61,14 +69,14 @@ namespace Compiler_build1
                 Statement();
                 match('}');*/
             }
-            else if(lookahead.text == "main")
+            else if(LT(1).text == "main")
             {
                 Statement();
                 match('}');
             }
             else
             {
-                throw new Exception("F**k!Where is your code?");
+                throw new Exception("parse err: "+LT(1).text);
             }
         }
         public bool Occur(string text)
@@ -86,15 +94,15 @@ namespace Compiler_build1
         public void Glob_Syb()
         {
             //bool occured_ch, occured_int = false;
-            while (lookahead.type==((int)tok_names.Id) )
+            while (LA(1)==((int)tok_names.Id) )
             {
                 Symbol_Tab loc = new Symbol_Tab("Global");
-                while (lookahead.type != ':')
+                while (LA(1) != ':')
                 {
-                    if (lookahead.type == (int)tok_names.Id && !Occur(lookahead.text))
+                    if (LA(1) == (int)tok_names.Id && !Occur(LT(1).text))
                     { 
-                        loc.children.Add(lookahead.text);
-                        Occured.Add(lookahead.text);
+                        loc.children.Add(LT(1).text);
+                        Occured.Add(LT(1).text);
                         consume();
                         
                     }
@@ -102,12 +110,12 @@ namespace Compiler_build1
                         consume();
                 }
                 consume();
-                switch (lookahead.text)
+                switch (LT(1).text)
                 {
                     case "INTEGER": loc.type = 1; consume(); break;
                     case "CHAR":loc.type = 2; consume(); break;
                     default:
-                        throw new Exception("No Such Type" + lookahead.text);
+                        throw new Exception("No Such Type" + LT(1).text);
                 }
                 Global_Symbol_Tab.Add(loc);
                 match(';');
@@ -115,12 +123,22 @@ namespace Compiler_build1
         }
         public void Statement()
         {
-            CodeGen gen = new CodeGen();
+            /*CodeGen gen = new CodeGen();
             gen.addChild(new FuncNode(new Token((int)tok_names.Begin, "MAIN")));
             while(lookahead.type != '}')
             {
+                switch (lookahead.type)
+                {
+                    case (int)tok_names.Id:
+                        {
+                            Token temp = lookahead;
+                            consume();
+                            match('=');
 
-            }
+                            break;
+                        }
+                }
+            }*/
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Compiler_build1
     public class globals
     {
         public static int line = 1;
-        public static string[] keyIds = { "break", "if", "else", "int", "print", "println" };
+        public static string[] keyIds = { "break", "continue", "if", "else", "int", "print", "println", "read" };
         public static string[] tokenNames = { "Number" };
     }
 }
