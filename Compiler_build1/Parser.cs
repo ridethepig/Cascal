@@ -53,6 +53,7 @@ namespace Compiler_build1
     }
     public class Parser : Parser_Base
     {
+        public static CodeGen gen = new CodeGen();
         public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
         public static List<string> Occured = new List<string>();
         public Parser(lexer input,int k):base(input,k){; }
@@ -65,12 +66,14 @@ namespace Compiler_build1
                 match('{');
                 Glob_Syb();      
                 match('}');
-                /*match((int)tok_names.Begin);
+                match((int)tok_names.Begin);
                 Statement();
-                match('}');*/
+                match('}');
             }
-            else if(LT(1).text == "main")
+            else if(LT(1).text == "MAIN")
             {
+                consume();
+                match('{');
                 Statement();
                 match('}');
             }
@@ -123,18 +126,19 @@ namespace Compiler_build1
         }
         public void Statement()
         {
-            int ptr_chd = 0;
-            CodeGen gen = new CodeGen();
+            int ptr_chd = 0;            
             gen.addChild(new AST(new Token((int)tok_names.Begin, "MAIN")));
             while(true)
             {
                 switch (LA(1))
                 {
-                    case (int)tok_names.Id:if (LA(2) == (int)tok_names.Assign)
+                    case (int)tok_names.Id:
+                        if (LA(2) == (int)tok_names.Assign)
                         {
                             gen.children[0].addChild(new AST(new Token((int)tok_names.Stmt, gen.children[0].token.text)));
                             gen.children[0].children[ptr_chd].addChild(new AST(new Token((int)tok_names.Assign, "=")));
                             gen.children[0].children[ptr_chd].children[0].addChild(new AST(new Token((int)tok_names.Id, LT(1).text)));
+                            consume();
                             Expression(gen.children[0].children[0]);
                             break;
                         }
@@ -142,13 +146,31 @@ namespace Compiler_build1
                             throw new Exception("expecting '=';get " + LT(2).text);
                     case (int)tok_names.If:break;
                     case (int)tok_names.While:break;
-                    case (int)tok_names.Sys:break;
+                    case (int)tok_names.Sys: switch (LT(1).text)
+                        {
+                            case "print":break;
+                            case "println":break;
+                            case "readln":break;
+                            case "break":break;
+                            case "continue":break;
+                            case "exit":break;                            
+                        }
+                        break;
                 }
             }
         }
         public void Expression(AST assign)
         {
-
+            consume();
+            while (true)
+            {
+                switch (LA(1))
+                {
+                    case (int)tok_names.Id: case (int)tok_names.Num:break;
+                    case (int)tok_names.Add: case (int)tok_names.Sub:break;
+                    case (int)tok_names.Div: case (int)tok_names.Mul: case (int)tok_names.Mod:break;                                            
+                }
+            }
         }
     }
 }

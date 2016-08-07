@@ -75,7 +75,7 @@ namespace Compiler_build1
                     case ']': case ':' : { char t = c; consume(); return new Token(t); }
                     case '/': consume(); if (c == '?') { consume(); Comment(); continue; } return new Token((int)(tok_names.Div), "/");
                     case '*': consume(); return new Token((int)(tok_names.Mul), "*");
-                    case '=': consume(); if (c == '=') { consume(); return new Token((int)(tok_names.Eq), "=="); } return new Token('=', "=");
+                    case '=': consume(); if (c == '=') { consume(); return new Token((int)(tok_names.Eq), "=="); } return new Token((int)(tok_names.Assign), "=");
                     case '+': consume(); return new Token((int)(tok_names.Add), "+");
                     case '-': consume(); return new Token((int)(tok_names.Sub), "-");
                     case '!': consume(); if (c == '=') { consume(); return new Token((int)(tok_names.Ne), "!= "); } return new Token((int)(tok_names.Lno), "!");
@@ -114,9 +114,19 @@ namespace Compiler_build1
             {
                 return new Token((int)(tok_names.Sys),local);
             }
-            if (local == "sizeof")
+            if (local == "SIZEOF")
             {
                 return new Token((int)(tok_names.Sizeof), local);
+            }
+            if (local == "IF")
+            {
+                return new Token((int)(tok_names.If), local);
+
+            }
+            if(local == "WHILE")
+            {
+                return new Token((int)(tok_names.While), local);
+
             }
             return new Token((int)(tok_names.Id),local);
         }

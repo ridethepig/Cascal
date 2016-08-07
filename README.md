@@ -12,3 +12,14 @@ It has many disabilities.I specially wrote a file to show what things it can't d
 ***
 ##		  License:
 License? What is License? I don't care about it. Since I don't care,use MIT or BSD.//I don't think anyone would like to use my code...^_^
+***
+#Cascal
+###编译器实验
+我的编译器（语言）有很多不能干的事情。我还特地写了一个文件来告诉你们它不能干什么。^_^
+至于为什么它叫做Cascal，是因为我采用了Pascal的变量声明方式和C语言语法。：-）
+它是纯手工的。
+我将奉上惨不忍睹的代码以及良好的参考代码（主要来自于Language Implementation Patterns的示例代码）
+###实现细节
+·LL(k)的语法分析
+·好不容易写了个AST
+·最终将编译为字节码并随附一个C写的虚拟机
