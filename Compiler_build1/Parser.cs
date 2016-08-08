@@ -68,7 +68,10 @@ namespace Compiler_build1
                 match('{');
                 Glob_Syb();      
                 match('}');
-                match((int)tok_names.Begin);
+                //match((int)tok_names.Begin);
+                if (LT(1).text == "MAIN") { consume(); }
+                else throw new Exception("F**k,where is your Main Func?!");
+                match('{');
                 Statement();
                 match('}');
             }
@@ -174,6 +177,7 @@ namespace Compiler_build1
                             gen.children[0].children[ptr_chd].children[0].addChild(1,new AST(new Token((int)tok_names.Id, LT(1).text)));
                             consume();
                             gen.children[0].children[ptr_chd].children[0].addChild(Expression());
+                            ptr_chd++;
                             break;
                         }
                         else
@@ -191,6 +195,7 @@ namespace Compiler_build1
                         }
                         break;
                 }
+                if (LA(1) == '}'&&LA(2) == lexer.EOF_T) { break; }
             }
         }
         public bool isOp(Token t)
@@ -200,7 +205,7 @@ namespace Compiler_build1
         }
         public AST Expression()
         {            
-            while (LT(1).text != ";")
+            while (LA(1) != ';')
             {
                 consume();
                 if (LT(1).type == (int)tok_names.Id)
@@ -208,7 +213,7 @@ namespace Compiler_build1
                     IN_SYB_TAB(LT(1).text);
                     stk1.Push(LT(1));
                 }
-                else if (LT(1).type == (int)tok_names.Id)
+                else if (LT(1).type == (int)tok_names.Num)
                 {
                     stk1.Push(LT(1));
                 }
