@@ -53,6 +53,7 @@ namespace Compiler_build1
     }
     public class Parser : Parser_Base
     {
+        public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
         public static CodeGen gen = new CodeGen();
         public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
         public static List<string> Occured = new List<string>();
@@ -89,10 +90,20 @@ namespace Compiler_build1
                 if (Occured[i] == text)
                 {
                     throw new Exception("Name '" + text + "' were declared.");
-                    return true;
                 }
             }
             return false;
+        }
+        public bool IN_SYB_TAB(string text)
+        {
+            for (int i = 0; i < Occured.Count; i++)
+            {
+                if (Occured[i] == text)
+                {
+                    return true;
+                }
+            }
+            throw new Exception("Name '" + text + "' were not declared.");
         }
         public void Glob_Syb()
         {
@@ -102,8 +113,9 @@ namespace Compiler_build1
                 Symbol_Tab loc = new Symbol_Tab("Global");
                 while (LA(1) != ':')
                 {
-                    if (LA(1) == (int)tok_names.Id && !Occur(LT(1).text))
-                    { 
+                    if (LA(1) == (int)tok_names.Id )
+                    {
+                        Occur(LT(1).text);
                         loc.children.Add(LT(1).text);
                         Occured.Add(LT(1).text);
                         consume();
@@ -124,6 +136,26 @@ namespace Compiler_build1
                 match(';');
             }
         }
+        public int level( Token t)
+        {
+            if (t.type == (int)tok_names.Add || t.type == (int)tok_names.Sub)
+            {
+                return 1;
+            }
+            if (t.type == (int)tok_names.Mul || t.type == (int)tok_names.Div || t.type == (int)tok_names.Mod)
+            {
+                return 2;
+            }
+            if (t.type == '(')
+            {
+                return 0;
+            }
+            if (t.type == ')')
+            {
+                return 4;
+            }
+            throw new Exception("level err:" + t.text);
+        }
         public void Statement()
         {
             int ptr_chd = 0;            
@@ -135,11 +167,12 @@ namespace Compiler_build1
                     case (int)tok_names.Id:
                         if (LA(2) == (int)tok_names.Assign)
                         {
+                            IN_SYB_TAB(LT(1).text);
                             gen.children[0].addChild(new AST(new Token((int)tok_names.Stmt, gen.children[0].token.text)));
                             gen.children[0].children[ptr_chd].addChild(new AST(new Token((int)tok_names.Assign, "=")));
-                            gen.children[0].children[ptr_chd].children[0].addChild(new AST(new Token((int)tok_names.Id, LT(1).text)));
+                            gen.children[0].children[ptr_chd].children[0].addChild(1,new AST(new Token((int)tok_names.Id, LT(1).text)));
                             consume();
-                            Expression(gen.children[0].children[0]);
+                            gen.children[0].children[ptr_chd].children[0].addChild(Expression());
                             break;
                         }
                         else
@@ -159,18 +192,68 @@ namespace Compiler_build1
                 }
             }
         }
-        public void Expression(AST assign)
+        public bool isOp(Token t)
         {
-            consume();
-            while (true)
+            int tp = t.type;
+            return (tp == (int)tok_names.Add || tp == (int)tok_names.Sub || tp == (int)tok_names.Mul || tp == (int)tok_names.Div || tp == (int)tok_names.Mod);
+        }
+        public AST Expression()
+        {            
+            while (LT(1).text != ";")
             {
-                switch (LA(1))
+                consume();
+                if (LT(1).type == (int)tok_names.Id)
                 {
-                    case (int)tok_names.Id: case (int)tok_names.Num:break;
-                    case (int)tok_names.Add: case (int)tok_names.Sub:break;
-                    case (int)tok_names.Div: case (int)tok_names.Mul: case (int)tok_names.Mod:break;                                            
+                    IN_SYB_TAB(LT(1).text);
+                    stk1.Push(LT(1));
+                }
+                else if (LT(1).type == (int)tok_names.Id)
+                {
+                    stk1.Push(LT(1));
+                }
+                else if (LT(1).type == ')')
+                {
+                    while (stk2.Peek().type != '(')
+                    {
+                        stk1.Push(stk2.Pop());
+                    }
+                    stk2.Pop();
+                }
+                else if (LT(1).type == '(')
+                {
+                    stk2.Push(LT(1));
+                }
+                else if (isOp(LT(1)))
+                {
+                    if (stk2.Count == 0)
+                    {
+                        stk2.Push(LT(1));
+                    }
+                    else if (level(LT(1)) >= level(stk2.Peek()))
+                    {
+                        stk2.Push(LT(1));
+                    }
+                    else if (level(LT(1)) < level(stk2.Peek()))
+                    {
+                        while (stk2.Count > 0)
+                        {
+                            if (level(stk2.Peek()) <= level(LT(1))) { break; }
+                            stk1.Push(stk2.Pop());
+                            stk2.Push(LT(1));
+                        }
+                    }
                 }
             }
+            if (stk2.Count > 0)
+            {
+                while (stk2.Count > 0)
+                {
+                    stk1.Push(stk2.Pop());
+                }
+            }
+            Token[] arr = stk1.ToArray();
+            consume();            
+            return root;
         }
     }
 }

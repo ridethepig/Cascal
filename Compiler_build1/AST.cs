@@ -8,7 +8,8 @@ namespace Compiler_build1
     {
         public Token token;
         public List<AST> children;
-
+        public AST lch;
+        public AST rch;
         public AST() {; }
         public AST(Token t) { token = t; }
         public AST(int tokenType) { this.token = new Token(tokenType); }
@@ -24,6 +25,17 @@ namespace Compiler_build1
             children.Add(t);
         }
         public bool isNil() { return token == null; }
+        public void addChild(int chtype,AST ch)
+        {
+            if (chtype == 1)
+            {
+                lch = ch;            
+            }
+            else if(chtype == 2)
+            {
+                rch = ch;
+            }
+        }
         /*public string toString() { return token.text; }
         public string toStringTree()
         {
