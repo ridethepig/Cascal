@@ -54,6 +54,7 @@ namespace Compiler_build1
     public class Parser : Parser_Base
     {
         public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
+        public Stack<AST> stk3 = new Stack<AST>();
         public static CodeGen gen = new CodeGen();
         public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
         public static List<string> Occured = new List<string>();
@@ -252,7 +253,23 @@ namespace Compiler_build1
                 }
             }
             Token[] arr = stk1.ToArray();
-            consume();            
+            Array.Reverse(arr);
+            consume();    
+            foreach(Token i in arr)
+            {
+                if (i.type == (int)tok_names.Id || i.type == (int)tok_names.Num)
+                {
+                    stk3.Push(new AST(i));
+                }
+                if (isOp(i))
+                {
+                    AST root_loc = new AST(i);
+                    root_loc.lch = stk3.Pop();
+                    root_loc.rch = stk3.Pop();
+                    stk3.Push(root_loc);
+                }
+            }
+            AST root = stk3.Peek();        
             return root;
         }
     }
