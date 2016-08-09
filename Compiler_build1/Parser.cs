@@ -25,6 +25,27 @@ namespace Compiler_build1
 
         }
     }
+    public class Variable
+    {
+        public int value;
+        public string name;
+        public string svalue;
+        public Variable(string name, int value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+        public Variable(string name,string svalue)
+        {
+            this.name = name;
+            this.svalue = svalue;
+        }
+        public Variable(string name)
+        {
+            this.name = name;            
+        }
+
+    }
     public class Parser_Base
     {
         lexer input;
@@ -53,6 +74,7 @@ namespace Compiler_build1
     }
     public class Parser : Parser_Base
     {
+        public static List<Variable> id_val = new List<Variable>();
         public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
         public Stack<AST> stk3 = new Stack<AST>();
         public static CodeGen gen = new CodeGen();
@@ -122,8 +144,9 @@ namespace Compiler_build1
                         Occur(LT(1).text);
                         loc.children.Add(LT(1).text);
                         Occured.Add(LT(1).text);
-                        consume();
-                        
+                        Variable n = new Variable(LT(1).text);
+                        id_val.Add(n);
+                        consume();                        
                     }
                     else
                         consume();
@@ -162,9 +185,10 @@ namespace Compiler_build1
         }
         public void Statement()
         {
+            bool stop = false;
             int ptr_chd = 0;            
             gen.addChild(new AST(new Token((int)tok_names.Begin, "MAIN")));
-            while(true)
+            while(true && !stop)
             {
                 switch (LA(1))
                 {
@@ -172,11 +196,10 @@ namespace Compiler_build1
                         if (LA(2) == (int)tok_names.Assign)
                         {
                             IN_SYB_TAB(LT(1).text);
-                            gen.children[0].addChild(new AST(new Token((int)tok_names.Stmt, gen.children[0].token.text)));
-                            gen.children[0].children[ptr_chd].addChild(new AST(new Token((int)tok_names.Assign, "=")));
-                            gen.children[0].children[ptr_chd].children[0].addChild(1,new AST(new Token((int)tok_names.Id, LT(1).text)));
+                            gen.children[0].addChild(new AST(new Token((int)tok_names.Assign, "=")));
+                            gen.children[0].children[ptr_chd].addChild(1,new AST(new Token((int)tok_names.Id, LT(1).text)));
                             consume();
-                            gen.children[0].children[ptr_chd].children[0].addChild(Expression());
+                            gen.children[0].children[ptr_chd].addChild(Expression());
                             ptr_chd++;
                             break;
                         }
@@ -186,12 +209,89 @@ namespace Compiler_build1
                     case (int)tok_names.While:break;
                     case (int)tok_names.Sys: switch (LT(1).text)
                         {
-                            case "print":break;
-                            case "println":break;
-                            case "readln":break;
+                            case "PRINT":
+                                {
+                                    consume();
+                                    match('(');
+                                    AST loc = new AST(new Token((int)tok_names.Sys, "PRINT"));
+                                    if (LA(1) == (int)tok_names.Num)
+                                    {
+                                        loc.parameter_str = LT(1).text;
+                                    }
+                                    else if (LA(1) == (int)tok_names.Id)
+                                    {
+                                        loc.parameter_tok = LT(1).text;
+                                    }
+                                    else throw new Exception("invailid parameter: " + LT(1).text);
+                                    consume();
+                                    match(')');
+                                    match(';');
+                                    gen.children[0].addChild(loc);
+                                    ptr_chd++;
+                                    break;                      
+                                }
+                            case "PRINTLN":
+                                {
+                                    consume();
+                                    match('(');
+                                    AST loc = new AST(new Token((int)tok_names.Sys, "PRINTLN"));
+                                    if (LA(1) == (int)tok_names.Num)
+                                    {
+                                        loc.parameter_str = LT(1).text;
+                                    }
+                                    else if (LA(1) == (int)tok_names.Id)
+                                    {
+                                        loc.parameter_tok = LT(1).text;
+                                    }
+                                    else throw new Exception("invailid parameter: " + LT(1).text);
+                                    consume();
+                                    match(')');
+                                    match(';');
+                                    gen.children[0].addChild(loc);
+                                    ptr_chd++;
+                                    break;
+                                }
+                            case "READLN":
+                                {
+                                    consume();
+                                    match('(');
+                                    AST loc = new AST(new Token((int)tok_names.Sys, "READLN"));
+                                    if (LA(1) == (int)tok_names.Id)
+                                    {
+                                        loc.parameter_tok = LT(1).text;
+                                    }
+                                    else throw new Exception("invailid parameter: " + LT(1).text);
+                                    consume();
+                                    match(')');
+                                    match(';');
+                                    gen.children[0].addChild(loc);
+                                    ptr_chd++;
+                                    break;
+                                }
                             case "break":break;
                             case "continue":break;
-                            case "exit":break;                            
+                            case "EXIT":
+                                {
+                                    consume();
+                                    match('(');
+                                    AST loc = new AST(new Token((int)tok_names.Sys, "EXIT"));
+                                    if (LA(1) == (int)tok_names.Num)
+                                    {
+                                        loc.parameter_str = LT(1).text;
+                                    }
+                                    else if (LA(1) == (int)tok_names.Id)
+                                    {
+                                        loc.parameter_tok = LT(1).text;
+                                    }
+                                    else throw new Exception("invailid parameter: " + LT(1).text);
+                                    consume();
+                                    match(')');
+                                    match(';');
+                                    gen.children[0].addChild(loc);
+                                    ptr_chd++;
+                                    stop = true;
+                                    break;
+                                }
                         }
                         break;
                 }
