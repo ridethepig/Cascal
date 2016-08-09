@@ -6,7 +6,7 @@ It has many disabilities.I specially wrote a file to show what things it can't d
 ##Details
 ·LL(k) Parser;  
 ·Uses AST;  
-·Bitcode & Virtual Machine(uses C)  
+·So far,it is only a Interpreter(next update,I will add a VM support and IR). :-(
 
 ##Warning: Do not use this code until 20,Aug.
 ***
@@ -22,4 +22,4 @@ License? What is License? I don't care about it. Since I don't care,use MIT or B
 ###实现细节
 ·LL(k)的语法分析
 ·好不容易写了个AST
-·最终将编译为字节码并随附一个C写的虚拟机
+·暂时只支持解释运行（下一次更新时将支持虚拟机和IR）。 :-(
