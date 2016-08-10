@@ -26,3 +26,20 @@ License? What is License? I don't care about it. Since I don't care,use MIT or B
 ##许可协议：
 License?我不管什么协议，随便吧，MIT 或 BSD。//我估计没人想要
 #####抱歉，我的网络很不好，没办法上传可执行文件，只好放在zip里一起放源码里了
+##使用方法
+>[可执行文件名] [代码文件名]
+##示例
+>VAR{  
+	A ,B : INTEGER;  
+	CH1 : CHAR;  
+}  
+MAIN{  
+	READLN(A);  
+	B = A + 1;  
+	PRINTLN(B);  
+	PRINT("HELLO,WORLD.");  
+	EXIT(0);  
+	/?THE REST WILL NOT BE EXECUTED,BUT IT IS LEGAL?/  
+	PRINTLN();  
+	PRINT();  
+}
