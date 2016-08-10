@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 namespace Compiler_build1
 {
     public enum tok_names

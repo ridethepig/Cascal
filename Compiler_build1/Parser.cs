@@ -1,30 +1,7 @@
 using System;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 namespace Compiler_build1
 {
-    public class Symbol_Tab
-    {
-        public int type;
-        public string scope;
-        public List<string> children;
-        public Symbol_Tab(int type,string scope)
-        {
-            this.type = type;
-            this.scope = scope;
-            this.children = new List<string>();
-        }
-        public Symbol_Tab(string scope)
-        {
-            this.scope = scope;
-            this.children = new List<string>();
-
-        }
-    }
     public class Parser_Base
     {
         lexer input;
@@ -55,22 +32,21 @@ namespace Compiler_build1
     {
         public static Dictionary<string, int> Dict_main = new Dictionary<string, int>();
         public static Dictionary<string, string> Dict_str = new Dictionary<string, string>();
+        public static Dictionary<string, int> Dict_id_type = new Dictionary<string, int>();
         public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
         public Stack<AST> stk3 = new Stack<AST>();
         public static CodeGen gen = new CodeGen();
-        public static List<Symbol_Tab> Global_Symbol_Tab = new List<Symbol_Tab>();
+        //public static List<string> Global_Symbol_Tab = new List<string>();
         public static List<string> Occured = new List<string>();
         public Parser(lexer input,int k):base(input,k){; }
         public void GlobDaclare()
-        {
-            //consume();
+        {            
             if (LT(1).text == "VAR")
             {
                 consume();
                 match('{');
                 Glob_Syb();      
                 match('}');
-                //match((int)tok_names.Begin);
                 if (LT(1).text == "MAIN") { consume(); }
                 else throw new Exception("F**k,where is your Main Func?!");
                 match('{');
@@ -112,20 +88,17 @@ namespace Compiler_build1
             throw new Exception("Name '" + text + "' were not declared.");
         }
         public void Glob_Syb()
-        {
-            //bool occured_ch, occured_int = false;
+        {            
             while (LA(1)==((int)tok_names.Id) )
             {
-                Symbol_Tab loc = new Symbol_Tab("Global");
+                List<string> loc = new List<string>();                
                 while (LA(1) != ':')
                 {
                     if (LA(1) == (int)tok_names.Id )
                     {
                         Occur(LT(1).text);
-                        loc.children.Add(LT(1).text);
+                        loc.Add(LT(1).text);
                         Occured.Add(LT(1).text);
-                        /*Variable n = new Variable(LT(1).text);
-                        id_val.Add(n);*/
                         consume();                        
                     }
                     else
@@ -135,25 +108,25 @@ namespace Compiler_build1
                 switch (LT(1).text)
                 {
                     case "INTEGER":
-                        loc.type = 1;
                         consume();
-                        foreach (string x in loc.children)
+                        foreach (string x in loc)
                         {
                             Dict_main.Add(x, 0);
+                            Dict_id_type.Add(x, 1);
                         }
                         break;
                     case "CHAR":
-                        loc.type = 2;
                         consume();
-                        foreach (string x in loc.children)
+                        foreach (string x in loc)
                         {
                             Dict_str.Add(x, "");
+                            Dict_id_type.Add(x, 2);
                         }
                         break;
                     default:
                         throw new Exception("No Such Type" + LT(1).text);
                 }
-                Global_Symbol_Tab.Add(loc);                
+                //Global_Symbol_Tab.Add(loc);                
                 match(';');
             }
         }
@@ -193,14 +166,14 @@ namespace Compiler_build1
                             gen.children[0].addChild(new AST(new Token((int)tok_names.Assign, "=")));
                             gen.children[0].children[ptr_chd].addChild(1,new AST(new Token((int)tok_names.Id, LT(1).text)));
                             consume();
-                            gen.children[0].children[ptr_chd].addChild(Expression());
+                            gen.children[0].children[ptr_chd].addChild(2,Expression());
                             ptr_chd++;
                             break;
                         }
                         else
                             throw new Exception("expecting '=';get " + LT(2).text);
-                    case (int)tok_names.If:break;
-                    case (int)tok_names.While:break;
+                    case (int)tok_names.If:throw new Exception("sorry,we don't support if stmt"); break;
+                    case (int)tok_names.While: throw new Exception("sorry,we don't support loop stmt"); break;
                     case (int)tok_names.Sys: switch (LT(1).text)
                         {
                             case "PRINT":
@@ -286,6 +259,8 @@ namespace Compiler_build1
                                     stop = true;
                                     break;
                                 }
+                            default:
+                                throw new Exception("F**k,what you have written?I don't know!!");
                         }
                         break;
                 }
