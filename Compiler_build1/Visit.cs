@@ -10,22 +10,22 @@ namespace Compiler_build1
         public int type = 0;
         public long cur_res_int = 0;
         public Visit() {; }
-        public void ExprSolution(AST root)
+        public void ExprSolution(ref AST root)
         {
             bool ac_left = false, ac_right = false;
-            ac_left = root.lch.token.type != (int)tok_names.Id || root.lch.token.type != (int)tok_names.Num;
-            ac_right = root.rch.token.type != (int)tok_names.Id || root.rch.token.type != (int)tok_names.Num;
-            if (!(ac_left && ac_right))
+            ac_left = root.lch.token.type != (int)tok_names.Id && root.lch.token.type != (int)tok_names.Num;
+            ac_right = root.rch.token.type != (int)tok_names.Id && root.rch.token.type != (int)tok_names.Num;
+            if (ac_left || ac_right)
             {
-                if (!ac_left)
+                if (ac_left)
                 {
                     op.Push(root.lch.token.type);
-                    ExprSolution(root.lch);
+                    ExprSolution(ref root.lch);
                 }
-                if (!ac_right)
+                if (ac_right)
                 {
                     op.Push(root.rch.token.type);
-                    ExprSolution(root.rch);
+                    ExprSolution(ref root.rch);
                 }
             }                        
             switch (root.lch.token.type)
@@ -77,12 +77,20 @@ namespace Compiler_build1
         }
         public void walk(AST root)
         {
-            Parser.Dict_str["CH1"] = "I'M ";
             if (root.children == null || root.children.Count == 0)
             {
                 if (root.lch != null && root.token.text == "=")
                 {
-                    ExprSolution(root.rch);
+                    op.Push(root.rch.token.type);
+                    ExprSolution(ref root.rch);
+                    if (Parser.Dict_id_type[root.lch.token.text] == 1)
+                    {
+                        Parser.Dict_main[root.lch.token.text] = Convert.ToInt64(root.rch.token.text);
+                    }
+                    else
+                    {
+                        Parser.Dict_str[root.lch.token.text] = root.rch.token.text;
+                    }
                     type = 0;
                 }
                 else
@@ -133,11 +141,11 @@ namespace Compiler_build1
                                     string key = root.parameter_tok;
                                     if (Parser.Dict_id_type[key] == 1)
                                     {
-                                        Console.Write(Parser.Dict_main[key]);
+                                        Console.WriteLine(Parser.Dict_main[key]);
                                     }
                                     else
                                     {
-                                        Console.Write(Parser.Dict_str[key]);
+                                        Console.WriteLine(Parser.Dict_str[key]);
                                     }
                                 }
                                 else if (root.parameter_str != "")
@@ -164,9 +172,9 @@ namespace Compiler_build1
                                 Environment.Exit(0);
                                 break;
                             }
-                    }
-                    return;
+                    }                    
                 }
+                return;
             }
             foreach (AST x in root.children)
             {

@@ -27,15 +27,7 @@ namespace Compiler_build1
             Parser par = new Parser(lex,2);
             Visit visitor = new Visit();
             par.GlobDaclare();
-            //visitor.walk(Parser.gen.children[0]);
-            /*Token t = lex.nextToken();
-            while (t.type != listlexer.EOF_T)
-            {
-                Console.WriteLine("<"+t.type+","+t.text+">");
-                t = lex.nextToken();
-            }
-            Console.WriteLine("<" + t.type + "," + t.text + ">");
-            Console.WriteLine(globals.line);*/
+            visitor.walk(Parser.gen.children[0]);
         }
     }
 }
