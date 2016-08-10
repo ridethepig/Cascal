@@ -80,6 +80,7 @@ namespace Compiler_build1
                                 {
                                     Console.WriteLine("PROGRAM EXIT WITH ({0})", root.parameter_str);
                                 }
+                                Environment.Exit(0);
                                 break;
                             }
                     }

@@ -259,6 +259,10 @@ namespace Compiler_build1
                                     gen.children[0].addChild(loc);
                                     ptr_chd++;
                                     stop = true;
+                                    while (LA(1) != '}')
+                                    {
+                                        consume();
+                                    }
                                     break;
                                 }
                             default:
