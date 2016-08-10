@@ -8,7 +8,7 @@ It has many disabilities.I specially wrote a file to show what things it can't d
 ·Uses AST;  
 ·So far,it is only a Interpreter(next update,I will add a VM support and IR). :-(
 
-##Warning: Do not use this code until 15,Aug.
+##Warning: There Still May Be Some Bugs... 
 ***
 ##		  License:
 License? What is License? I don't care about it. Since I don't care,use MIT or BSD.//I don't think anyone would like to use my code...^_^
@@ -23,3 +23,6 @@ License? What is License? I don't care about it. Since I don't care,use MIT or B
 ·LL(k)的语法分析  
 ·好不容易写了个AST  
 ·暂时只支持解释运行（下一次更新时将支持虚拟机和IR）。 :-(  
+##许可协议：
+License?我不管什么协议，随便吧，MIT 或 BSD。//我估计没人想要
+#####抱歉，我的网络很不好，没办法上传可执行文件，只好放在zip里一起放源码里了
