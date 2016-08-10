@@ -25,27 +25,6 @@ namespace Compiler_build1
 
         }
     }
-    public class Variable
-    {
-        public int value;
-        public string name;
-        public string svalue;
-        public Variable(string name, int value)
-        {
-            this.name = name;
-            this.value = value;
-        }
-        public Variable(string name,string svalue)
-        {
-            this.name = name;
-            this.svalue = svalue;
-        }
-        public Variable(string name)
-        {
-            this.name = name;            
-        }
-
-    }
     public class Parser_Base
     {
         lexer input;
@@ -74,7 +53,8 @@ namespace Compiler_build1
     }
     public class Parser : Parser_Base
     {
-        public static List<Variable> id_val = new List<Variable>();
+        public static Dictionary<string, int> Dict_main = new Dictionary<string, int>();
+        public static Dictionary<string, string> Dict_str = new Dictionary<string, string>();
         public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
         public Stack<AST> stk3 = new Stack<AST>();
         public static CodeGen gen = new CodeGen();
@@ -144,8 +124,8 @@ namespace Compiler_build1
                         Occur(LT(1).text);
                         loc.children.Add(LT(1).text);
                         Occured.Add(LT(1).text);
-                        Variable n = new Variable(LT(1).text);
-                        id_val.Add(n);
+                        /*Variable n = new Variable(LT(1).text);
+                        id_val.Add(n);*/
                         consume();                        
                     }
                     else
@@ -154,12 +134,26 @@ namespace Compiler_build1
                 consume();
                 switch (LT(1).text)
                 {
-                    case "INTEGER": loc.type = 1; consume(); break;
-                    case "CHAR":loc.type = 2; consume(); break;
+                    case "INTEGER":
+                        loc.type = 1;
+                        consume();
+                        foreach (string x in loc.children)
+                        {
+                            Dict_main.Add(x, 0);
+                        }
+                        break;
+                    case "CHAR":
+                        loc.type = 2;
+                        consume();
+                        foreach (string x in loc.children)
+                        {
+                            Dict_str.Add(x, "");
+                        }
+                        break;
                     default:
                         throw new Exception("No Such Type" + LT(1).text);
                 }
-                Global_Symbol_Tab.Add(loc);
+                Global_Symbol_Tab.Add(loc);                
                 match(';');
             }
         }

@@ -5,6 +5,7 @@ namespace Compiler_build1
 {
     class Visit
     {
-
+        public Visit() {; }
+        
     }
 }
