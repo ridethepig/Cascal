@@ -25,9 +25,10 @@ License? What is License? I don't care about it. Since I don't care,use MIT or B
 ·暂时只支持解释运行（下一次更新时将支持虚拟机和IR）。 :-(  
 ##许可协议：
 License?我不管什么协议，随便吧，MIT 或 BSD。//我估计没人想要
-#####抱歉，我的网络很不好，没办法上传可执行文件，只好放在zip里一起放源码里了
+#####抱歉，我的网络很不好，没办法上传可执行文件，只好放在zip里p一起放源码里了
 ##使用方法
 >[可执行文件名] [代码文件名]
+
 ##示例
 >VAR{  
 	A ,B : INTEGER;  
@@ -43,3 +44,12 @@ MAIN{
 	PRINTLN();  
 	PRINT();  
 }
+
+I have planned 6~7 times' updates.The next update will be released in at least one year. :-( Just because I am very busy.  
+Update 1: add control flow 'if' statement  
+Update 2: add control flow 'while' statement  
+Update 3: add pointer  
+Update 4: add array  
+Update 5: add self-define function  
+Update 6: bitcode and VM//exciting  
+Update 7: use llvm to compile to binary file//may not be released
