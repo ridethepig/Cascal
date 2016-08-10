@@ -25,7 +25,9 @@ namespace Compiler_build1
             string inputx = input.ToUpper();
             listlexer lex = new listlexer(inputx);
             Parser par = new Parser(lex,2);
+            Visit visitor = new Visit();
             par.GlobDaclare();
+            visitor.walk(Parser.gen.children[0]);
             /*Token t = lex.nextToken();
             while (t.type != listlexer.EOF_T)
             {

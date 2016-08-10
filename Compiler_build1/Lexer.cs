@@ -4,6 +4,7 @@ namespace Compiler_build1
 {
     public abstract class lexer
     {
+        protected bool ws = true;
         public static int EOF_T = 1;
         public static char EOF = (char) 255;
         protected string input;
@@ -25,7 +26,10 @@ namespace Compiler_build1
         public void consume()
         {
             advance();
-            WS();            
+            if (ws)
+            {
+                WS();
+            }
         }
         public void advance()
         {
@@ -146,11 +150,13 @@ namespace Compiler_build1
             char temp = c;
             string local = "";
             consume();
+            ws = false;
             while (c != temp)
             {
                 local += c;
                 consume();
             }
+            ws = true;
             consume();
             return new Token((int)(tok_names.Num), local);
         }
