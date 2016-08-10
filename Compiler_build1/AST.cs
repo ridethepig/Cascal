@@ -3,7 +3,7 @@ namespace Compiler_build1
 {
     unsafe public class AST
     {
-        public string parameter_str = null;
+        public string parameter_str = "";
         public string parameter_tok = null;
         public Token token;
         public List<AST> children;

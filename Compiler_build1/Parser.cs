@@ -30,7 +30,7 @@ namespace Compiler_build1
     }
     public class Parser : Parser_Base
     {
-        public static Dictionary<string, int> Dict_main = new Dictionary<string, int>();
+        public static Dictionary<string, long> Dict_main = new Dictionary<string, long>();
         public static Dictionary<string, string> Dict_str = new Dictionary<string, string>();
         public static Dictionary<string, int> Dict_id_type = new Dictionary<string, int>();
         public Stack<Token> stk1 = new Stack<Token>(), stk2 = new Stack<Token>();
@@ -205,13 +205,15 @@ namespace Compiler_build1
                                     if (LA(1) == (int)tok_names.Num)
                                     {
                                         loc.parameter_str = LT(1).text;
+                                        consume();
                                     }
                                     else if (LA(1) == (int)tok_names.Id)
                                     {
                                         loc.parameter_tok = LT(1).text;
+                                        consume();
                                     }
-                                    else throw new Exception("invailid parameter: " + LT(1).text);
-                                    consume();
+                                    else if (LA(1) == ')') {; }
+                                    else throw new Exception("invailid parameter: " + LT(1).text);                                    
                                     match(')');
                                     match(';');
                                     gen.children[0].addChild(loc);

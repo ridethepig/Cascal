@@ -27,7 +27,66 @@ namespace Compiler_build1
             {
                 switch (root.token.text)
                 {
-                    //case "READLN":
+                    case "READLN":
+                        {
+                            string key = root.parameter_tok;
+                            if (!Parser.Dict_id_type.ContainsKey(key))
+                            {
+                                throw new Exception("undeclared identifier: " + key);
+                            }
+                            if (Parser.Dict_id_type[key] == 1)
+                            {
+                                Parser.Dict_main[key] = Convert.ToInt64(Console.ReadLine());
+                            }
+                            else if (Parser.Dict_id_type[key] == 2)
+                            {
+                                Parser.Dict_str[key] = Convert.ToString(Console.ReadLine());
+                            }
+                            break;
+                        }
+                    case "PRINT":
+                        {
+                            if (root.parameter_tok != null)
+                            {
+                                string key = root.parameter_tok;
+                                Console.Write(Parser.Dict_main[key]);
+                            }
+                            else
+                            {
+                                Console.Write(root.parameter_str);
+                            }
+                            break;
+                        }
+                    case "PRINTLN":
+                        {
+                            if (root.parameter_tok != null)
+                            {
+                                string key = root.parameter_tok;
+                                Console.WriteLine(Parser.Dict_main[key]);
+                            }
+                            else if (root.parameter_str != "")
+                            {
+                                Console.WriteLine(root.parameter_str);
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                            }
+                            break;
+                        }
+                    case "EXIT":
+                        {
+                            if (root.parameter_tok != null)
+                            {
+                                string key = root.parameter_tok;
+                                Console.WriteLine("PROGRAM EXIT WITH ({0})", Parser.Dict_main[key]);
+                            }
+                            else if (root.parameter_str != "")
+                            {
+                                Console.WriteLine("PROGRAM EXIT WITH ({0})", root.parameter_str);
+                            }
+                            break;                        
+                        }
                 }
             }
             foreach (AST x in root.children)
