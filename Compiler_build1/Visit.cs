@@ -54,11 +54,11 @@ namespace Compiler_build1
                 }
                 switch (op.Pop())
                 {
-                    case (int)tok_names.Add : cur_res_int = lch + rch; break;
-                    case (int)tok_names.Sub : cur_res_int = lch - rch; break;
-                    case (int)tok_names.Mul : cur_res_int = lch * rch; break;
-                    case (int)tok_names.Mod : cur_res_int = lch / rch; break;
-                    case (int)tok_names.Div : cur_res_int = lch % rch; break;
+                    case (int)tok_names.Add : cur_res_int = rch + lch; break;
+                    case (int)tok_names.Sub : cur_res_int = rch - lch; break;
+                    case (int)tok_names.Mul : cur_res_int = rch * lch; break;
+                    case (int)tok_names.Mod : cur_res_int = rch / lch; break;
+                    case (int)tok_names.Div : cur_res_int = rch % lch; break;
                 }
                 root = new AST(new Token((int)tok_names.Num, Convert.ToString(cur_res_int)));
             }

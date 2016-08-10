@@ -310,18 +310,18 @@ namespace Compiler_build1
                     {
                         stk2.Push(LT(1));
                     }
-                    else if (level(LT(1)) >= level(stk2.Peek()))
+                    else if (level(LT(1)) > level(stk2.Peek()))
                     {
                         stk2.Push(LT(1));
                     }
-                    else if (level(LT(1)) < level(stk2.Peek()))
+                    else if (level(LT(1)) <= level(stk2.Peek()))
                     {
                         while (stk2.Count > 0)
                         {
-                            if (level(stk2.Peek()) <= level(LT(1))) { break; }
+                            if (level(LT(1)) > level(stk2.Peek())) { break; }
                             stk1.Push(stk2.Pop());
-                            stk2.Push(LT(1));
                         }
+                        stk2.Push(LT(1));
                     }
                 }
             }

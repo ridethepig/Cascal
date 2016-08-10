@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 namespace Compiler_build1
 {
-    unsafe public class AST
+     public class AST
     {
         public string parameter_str = "";
         public string parameter_tok = null;
