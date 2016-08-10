@@ -12,6 +12,7 @@ namespace Compiler_build1
         }
         public void walk(AST root)
         {
+            Parser.Dict_str["CH1"] = "I'M ";
             if (root.children == null || root.children.Count == 0)
             {
                 if (root.lch != null)
@@ -44,7 +45,14 @@ namespace Compiler_build1
                                 if (root.parameter_tok != null)
                                 {
                                     string key = root.parameter_tok;
-                                    Console.Write(Parser.Dict_main[key]);
+                                    if (Parser.Dict_id_type[key] == 1)
+                                    {
+                                        Console.Write(Parser.Dict_main[key]);
+                                    }
+                                    else
+                                    {
+                                        Console.Write(Parser.Dict_str[key]);
+                                    }
                                 }
                                 else
                                 {
@@ -57,7 +65,14 @@ namespace Compiler_build1
                                 if (root.parameter_tok != null)
                                 {
                                     string key = root.parameter_tok;
-                                    Console.WriteLine(Parser.Dict_main[key]);
+                                    if (Parser.Dict_id_type[key] == 1)
+                                    {
+                                        Console.Write(Parser.Dict_main[key]);
+                                    }
+                                    else
+                                    {
+                                        Console.Write(Parser.Dict_str[key]);
+                                    }
                                 }
                                 else if (root.parameter_str != "")
                                 {
