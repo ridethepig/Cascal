@@ -158,7 +158,9 @@ namespace Compiler_build1
             }
             ws = true;
             consume();
-            return new Token((int)(tok_names.Num), local);
+            Token tk = new Token((int)(tok_names.Num), local);
+            tk.isstr = true;
+            return tk;
         }
         public void Comment()
         {

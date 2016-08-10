@@ -3,6 +3,7 @@ namespace Compiler_build1{
     public class Token{
         public int type;
         public string text;
+        public bool isstr = false;
         public Token(int type,string text){
             this.type = type;
             this.text = text;
