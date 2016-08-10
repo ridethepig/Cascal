@@ -8,7 +8,7 @@ It has many disabilities.I specially wrote a file to show what things it can't d
 ·Uses AST;  
 ·So far,it is only a Interpreter(next update,I will add a VM support and IR). :-(
 
-##Warning: Do not use this code until 20,Aug.
+##Warning: Do not use this code until 15,Aug.
 ***
 ##		  License:
 License? What is License? I don't care about it. Since I don't care,use MIT or BSD.//I don't think anyone would like to use my code...^_^
